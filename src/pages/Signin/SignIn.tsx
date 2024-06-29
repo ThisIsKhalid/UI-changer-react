@@ -2,18 +2,23 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const SignIn = () => {
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    console.log(data);
+    if (!data.email || !data.password) {
+      return;
+    }
 
     try {
       const response = await axios.post(
         "http://localhost:5000/api/v1/auth/signin",
         data
       );
-      console.log(response.data);
+      const { token } = response.data;
+      console.log(token);
+      localStorage.setItem("token", token);
     } catch (error) {
       console.error("There was an error signing up:", error);
     }
